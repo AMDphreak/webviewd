@@ -1,0 +1,19 @@
+name "webviewd"
+description "D bindings for webview"
+authors "ronnie"
+copyright "Copyright © 2024, ronnie"
+license "MIT"
+
+libs "gtk+-3.0" "webkit2gtk-4.1" "stdc++" platform="freebsd"
+libs "gtk+-3.0" "webkit2gtk-4.1" "stdc++" platform="linux"
+libs "WebKit" "dl" platform="osx"
+
+preBuildCommands "g++ -c libs/webview/webview.cc -std=c++11 -DWEBVIEW_STATIC `pkg-config --cflags gtk+-3.0 webkit2gtk-4.1` -o webview-freebsd.o" platform="freebsd"
+preBuildCommands "g++ -c libs/webview/webview.cc -std=c++11 -DWEBVIEW_STATIC `pkg-config --cflags gtk+-3.0 webkit2gtk-4.1` -o webview-linux.o" platform="linux"
+preBuildCommands "g++ -c libs/webview/webview.cc -std=c++11 -DWEBVIEW_STATIC -o webview-osx.o" platform="osx"
+preBuildCommands "cl /c /EHsc /std:c++14 /Ilibs/webview2 /DWEBVIEW_STATIC libs/webview/webview.cc /Fe:webview.obj" platform="windows"
+
+sourceFiles "webview-freebsd.o" platform="freebsd"
+sourceFiles "webview-linux.o" platform="linux"
+sourceFiles "webview-osx.o" platform="osx"
+sourceFiles "webview.obj" platform="windows"
