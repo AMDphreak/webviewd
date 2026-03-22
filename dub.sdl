@@ -1,19 +1,30 @@
 name "webviewd"
-description "D bindings for webview"
+description "D bindings for webview (precompiled version)"
 authors "ronnie"
 copyright "Copyright © 2024, ronnie"
 license "MIT"
 
-libs "gtk+-3.0" "webkit2gtk-4.1" "stdc++" platform="freebsd"
-libs "gtk+-3.0" "webkit2gtk-4.1" "stdc++" platform="linux"
-libs "WebKit" "dl" platform="osx"
+configuration "library" {
+    targetType "library"
+    sourceFiles-windows-x86_64 "$PACKAGE_DIR/precompiled/windows-x64/webview.lib"
+    lflags-linux-x86_64 "-L$PACKAGE_DIR/precompiled/linux-x86_64/" "-lwebview"
+    libs-linux "dl" "gtk-3" "webkit2gtk-4.1" "stdc++"
+    libs-windows "advapi32" "ole32" "shell32" "shlwapi" "user32" "version"
+}
 
-preBuildCommands "clang++ -c libs/webview/webview.cc -std=c++11 -DWEBVIEW_STATIC `pkg-config --cflags gtk+-3.0 webkit2gtk-4.1` -o webview-freebsd.o" platform="freebsd"
-preBuildCommands "g++ -c libs/webview/webview.cc -std=c++11 -DWEBVIEW_STATIC `pkg-config --cflags gtk+-3.0 webkit2gtk-4.1` -o webview-linux.o" platform="linux"
-preBuildCommands "g++ -c libs/webview/webview.cc -std=c++11 -DWEBVIEW_STATIC -o webview-osx.o" platform="osx"
-preBuildCommands "cl /c /EHsc /std:c++14 /Ilibs/webview2 /DWEBVIEW_STATIC libs/webview/webview.cc /Fe:webview.obj" platform="windows"
+// Keep original source build as an option
+configuration "source" {
+    libs "gtk+-3.0" "webkit2gtk-4.1" "stdc++" platform="freebsd"
+    libs "gtk+-3.0" "webkit2gtk-4.1" "stdc++" platform="linux"
+    libs "WebKit" "dl" platform="osx"
 
-sourceFiles "webview-freebsd.o" platform="freebsd"
-sourceFiles "webview-linux.o" platform="linux"
-sourceFiles "webview-osx.o" platform="osx"
-sourceFiles "webview.obj" platform="windows"
+    preBuildCommands "clang++ -c libs/webview/webview.cc -std=c++11 -DWEBVIEW_STATIC `pkg-config --cflags gtk+-3.0 webkit2gtk-4.1` -o webview-freebsd.o" platform="freebsd"
+    preBuildCommands "g++ -c libs/webview/webview.cc -std=c++11 -DWEBVIEW_STATIC `pkg-config --cflags gtk+-3.0 webkit2gtk-4.1` -o webview-linux.o" platform="linux"
+    preBuildCommands "g++ -c libs/webview/webview.cc -std=c++11 -DWEBVIEW_STATIC -o webview-osx.o" platform="osx"
+    preBuildCommands "cl /c /EHsc /std:c++14 /Ilibs/webview2 /DWEBVIEW_STATIC libs/webview/webview.cc /Fe:webview.obj" platform="windows"
+
+    sourceFiles "webview-freebsd.o" platform="freebsd"
+    sourceFiles "webview-linux.o" platform="linux"
+    sourceFiles "webview-osx.o" platform="osx"
+    sourceFiles "webview.obj" platform="windows"
+}

@@ -1,16 +1,18 @@
-.dub
-docs.json
-__dummy.html
-docs/
-/webviewd
-webviewd.so
-webviewd.dylib
-webviewd.dll
-webviewd.a
-webviewd.lib
-webviewd-test-*
-*.exe
-*.pdb
-*.o
-*.obj
-*.lst
+# Deny-all by default
+*
+
+# Allow-list
+!/.gitignore
+!/.gitattributes
+!/LICENSE
+!/README.md
+!/README.pt-BR.md
+!/dub.sdl
+!/dub.json
+!/.github/
+!/source/
+!/examples/
+!/precompiled/
+!/precompiled/**
+!/libs/
+!/libs/**
